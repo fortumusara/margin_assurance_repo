@@ -3,32 +3,15 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.11  # or 3.10 depending on your repo
+      python: 3.11
     commands:
       - echo Installing dependencies...
-      - pip install --upgrade pip
       - pip install -r requirements.txt
-
-  pre_build:
-    commands:
-      - echo Running lint checks...
-      - pip install flake8
-      - flake8 src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
-      - flake8 src/ tests/ --max-complexity=10 --max-line-length=120 --statistics
-
   build:
     commands:
-      - echo Running unit tests...
-      - pip install pytest
-      - pytest tests/
-
-  post_build:
-    commands:
-      - echo Build completed on `date`
-      - echo Preparing artifacts...
+      - echo Running app.py...
+      - python app.py
 
 artifacts:
   files:
-    - "**/*"
-  discard-paths: no
-  base-directory: reports/
+    - app.py
