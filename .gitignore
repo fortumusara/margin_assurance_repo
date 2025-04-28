@@ -2,3 +2,7 @@
 *.tfstate.backup
 .terraform/
 terraform.tfvars
+package/
+*.zip
+*.pyc
+__pycache__/

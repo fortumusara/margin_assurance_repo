@@ -5,13 +5,52 @@ phases:
     runtime-versions:
       python: 3.11
     commands:
-      - echo Installing dependencies...
-      - pip install -r requirements.txt
+      - echo "Installing dependencies..."
+      - pip install -r requirements.txt -t package/
+      - cp -r *.py package/
+
+  pre_build:
+    commands:
+      - echo "Preparing deployment package..."
+      - cd package
+      - zip -r ../lambda-package.zip .
+
   build:
     commands:
-      - echo Running app.py...
-      - python app.py
+      - echo "Build phase complete."
+
+  post_build:
+    commands:
+      - echo "Generating appspec.yml and deployment scripts..."
+      - cd ..
+      - |
+        cat <<EOF > appspec.yml
+        version: 0.0
+        Resources:
+          - myLambdaFunction:
+              Type: AWS::Lambda::Function
+              Properties:
+                Name: ${LAMBDA_FUNCTION_NAME}  # Dynamic Lambda Name
+                Alias: live
+        EOF
+      - |
+        cat <<EOF > deploy-scripts/create-deployment.json
+        {
+          "applicationName": "margin-assurance-codedeploy-app",
+          "deploymentGroupName": "margin-assurance-lambda-deployment-group",
+          "revision": {
+            "revisionType": "S3",
+            "s3Location": {
+              "bucket": "${AWS_BUCKET_NAME}",
+              "key": "${AWS_KEY_NAME}",
+              "bundleType": "zip"
+            }
+          }
+        }
+        EOF
 
 artifacts:
   files:
-    - app.py
+    - lambda-package.zip
+    - appspec.yml
+  discard-paths: yes
