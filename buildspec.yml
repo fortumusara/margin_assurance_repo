@@ -8,13 +8,13 @@ phases:
       - echo "Installing dependencies..."
       - mkdir -p package
       - pip install -r requirements.txt -t package/
-      - cp lambda_function.py package/  # Copy lambda_function.py to the package directory
+      - cp lambda_function.py package/
 
   pre_build:
     commands:
       - echo "Preparing deployment package..."
       - cd package
-      - zip -r ../lambda-package.zip .  # Create a ZIP package of the lambda function
+      - zip -r ../lambda-package.zip .
 
   build:
     commands:
@@ -35,7 +35,7 @@ phases:
                 Name: ${LAMBDA_FUNCTION_NAME}
                 Alias: live
         EOF
-      - |
+
         cat <<EOF > deploy-scripts/create-deployment.json
         {
           "applicationName": "margin-assurance-codedeploy-app",
