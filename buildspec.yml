@@ -6,14 +6,15 @@ phases:
       python: 3.11
     commands:
       - echo "Installing dependencies..."
+      - mkdir -p package
       - pip install -r requirements.txt -t package/
-      - cp lambda_function.py package/  # Copy lambda_function.py to the package directory
+      - cp lambda_function.py package/
 
   pre_build:
     commands:
       - echo "Preparing deployment package..."
       - cd package
-      - zip -r ../lambda-package.zip .  # Create a ZIP package of the lambda function
+      - zip -r ../lambda-package.zip .
 
   build:
     commands:
@@ -23,6 +24,7 @@ phases:
     commands:
       - echo "Generating appspec.yml and deployment scripts..."
       - cd ..
+      - mkdir -p deploy-scripts
       - |
         cat <<EOF > appspec.yml
         version: 0.0
@@ -30,7 +32,7 @@ phases:
           - myLambdaFunction:
               Type: AWS::Lambda::Function
               Properties:
-                Name: ${LAMBDA_FUNCTION_NAME}  # Dynamic Lambda Name
+                Name: ${LAMBDA_FUNCTION_NAME}
                 Alias: live
         EOF
       - |
