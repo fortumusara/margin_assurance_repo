@@ -1,21 +1,20 @@
 import json
 
-def handler(event, context):
-    """
-    A simple ETL Lambda to test the CodePipeline deployment.
-    Extracts input, Transforms it to uppercase, and Loads a response.
-    """
-    # Extract
-    input_text = event.get('text', 'default text')
-    
-    # Transform
-    transformed_text = input_text.upper()
+def lambda_handler(event, context):
+    # Simple ETL simulation: Extract, Transform, Load
+    print("Extracting event...")
+    extracted_data = event.get("data", {})
 
-    # Load (return output)
+    print("Transforming data...")
+    transformed_data = {k: str(v).upper() for k, v in extracted_data.items()}
+
+    print("Loading data...")
+    result = {
+        "message": "ETL operation successful",
+        "transformed_data": transformed_data
+    }
+
     return {
-        'statusCode': 200,
-        'body': json.dumps({
-            'original': input_text,
-            'transformed': transformed_text
-        })
+        "statusCode": 200,
+        "body": json.dumps(result)
     }
