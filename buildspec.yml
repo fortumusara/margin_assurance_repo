@@ -7,13 +7,13 @@ phases:
     commands:
       - echo "Installing dependencies..."
       - pip install -r requirements.txt -t package/
-      - cp -r *.py package/
+      - cp lambda_function.py package/  # Copy lambda_function.py to the package directory
 
   pre_build:
     commands:
       - echo "Preparing deployment package..."
       - cd package
-      - zip -r ../lambda-package.zip .
+      - zip -r ../lambda-package.zip .  # Create a ZIP package of the lambda function
 
   build:
     commands:
