@@ -35,7 +35,7 @@ phases:
                 Name: ${LAMBDA_FUNCTION_NAME}
                 Alias: live
         EOF
-      - |
+
         cat <<EOF > deploy-scripts/create-deployment.json
         {
           "applicationName": "margin-assurance-codedeploy-app",
