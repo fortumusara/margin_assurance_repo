@@ -166,23 +166,19 @@ resource "aws_codebuild_project" "build_project" {
   }
 
   source {
-    type            = "GITHUB"
-    location        = "https://github.com/${var.github_repo_full_name}.git"
+    type            = "CODEPIPELINE"
     buildspec       = "buildspec.yml"
     git_clone_depth = 1
   }
-# Disabling cache by not including the cache block
+
+  artifacts {
+    type      = "CODEPIPELINE"
+    location  = "build_output"
+  }
+
   cache {
     type     = "NO_CACHE"  # Disable cache
     location = ""
-  }
-
-  artifacts {
-    type      = "S3"
-    location  = aws_s3_bucket.codepipeline_bucket.bucket
-    name      = "build_output"
-    packaging = "ZIP"
-    path      = "build_output/"
   }
 }
 
