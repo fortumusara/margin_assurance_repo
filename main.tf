@@ -171,6 +171,11 @@ resource "aws_codebuild_project" "build_project" {
     buildspec       = "buildspec.yml"
     git_clone_depth = 1
   }
+# Disabling cache by not including the cache block
+  cache {
+    type     = "NO_CACHE"  # Disable cache
+    location = ""
+  }
 
   artifacts {
     type      = "S3"
